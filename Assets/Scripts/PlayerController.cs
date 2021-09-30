@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody playerRb;
+    private Animator playerAnim;
     [SerializeField] GameObject centerofMass;
-    //[SerializeField] GameObject focalPoint;
+    
     
 
     private float horizontalInput;
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float gravityModifier;
 
     private bool isOnGround = true;
+    private bool isMovement;
      
     
 
@@ -25,7 +27,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
-        //focalPoint = GameObject.Find("FocalPoint");
+        playerAnim = GetComponent<Animator>();
 
         Physics.gravity *= gravityModifier;
         playerRb.centerOfMass = centerofMass.transform.position;
@@ -34,23 +36,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //movement
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-
-        if (isOnGround && transform.position.y > -yBound)
-        {
-            
-            transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
-            transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
-        }
-
-        //jumping
-        if (Input.GetKeyDown(KeyCode.Space) && isOnGround && transform.position.y > -yBound)
-        {
-            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isOnGround = false;
-        }
+        PlayerMovement();
+        PlayerJumping();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -59,6 +46,43 @@ public class PlayerController : MonoBehaviour
         {
             isOnGround = true;
             Debug.Log("player is on plane");
+        }
+    }
+
+    //Movement
+    private void PlayerMovement()
+    {
+        
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
+
+
+        if (isOnGround && transform.position.y > -yBound)
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
+            transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
+        }
+
+        if ((verticalInput != 0 ) && isOnGround)
+        {
+            playerAnim.SetFloat("Speed_f", 1.0f);
+
+        }
+        else if (verticalInput == 0 )
+        {
+            playerAnim.SetFloat("Speed_f", 0);
+        }
+    }
+
+    //Jumping
+    private void PlayerJumping()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isOnGround && transform.position.y > -yBound)
+        {
+            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            playerAnim.SetTrigger("Jump_trig");
+            playerAnim.SetFloat("Speed_f", 0);
+            isOnGround = false;
         }
     }
 }
