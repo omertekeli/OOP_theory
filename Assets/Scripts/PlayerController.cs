@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject centerofMass;
     
     
-
+    //Encapsulation theory is applied to protect values.
     private float horizontalInput;
     private float verticalInput;
     [SerializeField] float speed = 5.0f;
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         PlayerMovement();
         PlayerJumping();
@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
 
         if (isOnGround && transform.position.y > -yBound)
         {
+            
             transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
             transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
         }
@@ -79,6 +80,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isOnGround && transform.position.y > -yBound)
         {
+            
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             playerAnim.SetTrigger("Jump_trig");
             playerAnim.SetFloat("Speed_f", 0);

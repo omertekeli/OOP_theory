@@ -4,41 +4,61 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public List<GameObject> animalPrefabs;
+    public List<GameObject> ballPrefabs;
 
  
     private readonly float zPos = 8.6f;
     private readonly float xPos = 4.7f;
-    private readonly float yPos = 1.7f;
+    private readonly float yPos = 1.5f;
 
-    private int waveNumber = 1;
-    private int animalCount;
+    private int ballCount;
 
+    //Encapsulation example
+    private int _waveNumber = 1;
+    public int waveNumber { 
+        
+        get { return _waveNumber; }
 
+        set
+        {
+            if (value < 1)
+            {
+                Debug.LogError("Please set this value as positive number");
+            }
+            else
+            {
+                _waveNumber = value;
+            }
+        } 
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
-        SpawnEnemyWave(waveNumber);
+        SpawnEnemyWave(_waveNumber);
     }
 
     // Update is called once per frame
     void Update()
     {
-        animalCount = FindObjectsOfType<Animal>().Length;
+        ballCount = FindObjectsOfType<Ball>().Length;
 
-        if (animalCount == 0)
+        if (ballCount == 0)
         {
-            waveNumber++;
-            SpawnEnemyWave(waveNumber);
+            _waveNumber++;
+            SpawnEnemyWave(_waveNumber);
         }
     }
+    
 
-    void SpawnEnemyWave(int animalsToSpawn)
+    /*Below two methods can run in update method, but this not clean code.
+    To ensure that I applied abstraction theory*/
+    void SpawnEnemyWave(int ballsToSpawn)
     {
-        for (int i = 0; i < animalsToSpawn; i++)
+        for (int i = 0; i < ballsToSpawn; i++)
         {
-            int index = Random.Range(0, animalPrefabs.Count);
-            Instantiate(animalPrefabs[index], GenerateSpawnPosition(), animalPrefabs[index].transform.rotation);
+            int index = Random.Range(0, ballPrefabs.Count);
+            Instantiate(ballPrefabs[index], GenerateSpawnPosition(), ballPrefabs[index].transform.rotation);
         }
         
     }
