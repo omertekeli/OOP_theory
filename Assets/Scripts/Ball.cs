@@ -26,11 +26,13 @@ public class Ball : MonoBehaviour
     protected float yDestroyBound = 5.0f;
     protected Rigidbody ballRb;
     protected GameObject player;
+    protected PlayerController playerController;
 
     protected void Start()
     {
         ballRb = GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -39,19 +41,19 @@ public class Ball : MonoBehaviour
         Destroy();
     }
 
-    //This method will be used by Fox and Rooster classes.
+    //This method will be used by YellowBall and RedBall classes.
     public virtual void MoveToPlayer()
     {
-        
 
-        if (transform.position.y > -yMoveBound)
+
+        if ((transform.position.y > -yMoveBound) && playerController.gameOver == false)
         {
             ballRb.AddForce((player.transform.position - transform.position).normalized * _speed);
         }
         
     }
 
-    //This method will be used by Fox and Rooster classes.
+    //This method will be used by YellowBall and RedBall classes.
     public void Destroy()
     {
         if (transform.position.y < -yDestroyBound)

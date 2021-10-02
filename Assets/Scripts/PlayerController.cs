@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,11 +16,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed = 5.0f;
     [SerializeField] float turnSpeed = 150.0f;
     [SerializeField] float yBound = 2.0f;
+    [SerializeField] float yDead = 10.0f;
     [SerializeField] float jumpForce;
     [SerializeField] float gravityModifier;
 
     private bool isOnGround = true;
     private bool isMovement;
+    
+    public bool gameOver;
      
     
 
@@ -45,7 +49,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Plane"))
         {
             isOnGround = true;
-            Debug.Log("player is on plane");
+            //Debug.Log("player is on plane");
         }
     }
 
@@ -73,6 +77,12 @@ public class PlayerController : MonoBehaviour
         {
             playerAnim.SetFloat("Speed_f", 0);
         }
+
+        if (transform.position.y < -yDead)
+        {
+            gameOver = true;
+            RestartGame();
+        }
     }
 
     //Jumping
@@ -87,4 +97,10 @@ public class PlayerController : MonoBehaviour
             isOnGround = false;
         }
     }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
 }

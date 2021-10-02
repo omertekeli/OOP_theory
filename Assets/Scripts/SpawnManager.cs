@@ -5,11 +5,11 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public List<GameObject> ballPrefabs;
+    protected PlayerController playerController;
 
- 
     private readonly float zPos = 8.6f;
     private readonly float xPos = 4.7f;
-    private readonly float yPos = 1.5f;
+    private readonly float yPos = 0.5f;
 
     private int ballCount;
 
@@ -35,6 +35,7 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         SpawnEnemyWave(_waveNumber);
     }
 
@@ -43,7 +44,7 @@ public class SpawnManager : MonoBehaviour
     {
         ballCount = FindObjectsOfType<Ball>().Length;
 
-        if (ballCount == 0)
+        if (ballCount == 0 && playerController.gameOver==false)
         {
             _waveNumber++;
             SpawnEnemyWave(_waveNumber);
