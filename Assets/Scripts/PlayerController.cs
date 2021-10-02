@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
             playerAnim.SetFloat("Speed_f", 0);
         }
 
-        if (transform.position.y < -yDead)
+        if (transform.position.y < -yDead || Input.GetKeyDown(KeyCode.R))
         {
             gameOver = true;
             RestartGame();
